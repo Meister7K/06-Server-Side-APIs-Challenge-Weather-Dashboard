@@ -24,3 +24,6 @@ body{
     background-color: lightskyblue;
     /* filter: opacity(.5); */
 }
+#city-input{
+    text-shadow: none;
+}
