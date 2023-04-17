@@ -75,9 +75,24 @@ function getWeatherForecast(cityName) {
 // Get search history buttons /append into html/
 function createHistoryLog(cityName){
     var searchedCity = cityName.trim();
-    var evaluateButton = $()
+    var evaluateButton = $(`#search-history > BUTTON[value=${searchedCity}]`);
+    if(evaluateButton.length == 1){
+        return;
+    }
 
-}
+    if(!cityArray.includes(cityName)){
+        cityArray.push(cityName);
+        localStorage.setItem('weatherSearches', JSON.stringify(cityArray))
+    }
+
+    $("#search-history").prepend(`<button class="btn btn-dark historyBtn" value=${cityName}>${cityName}</button>`)
+};
+
+function setLocalStorage(){
+    $.each(array, (i) => {
+createHistoryLog(array[i])
+    })
+};
 // initial calls 
 getCurrentWeather("Minneapolis");
 getWeatherForecast("Minneapolis");
@@ -87,13 +102,13 @@ $('#city-search-button').click((e) => {
     var cityName = $('#city-input').val();
     getCurrentWeather(cityName);
     getWeatherForecast(cityName);
-})
+});
 
 $('#search-history').click((e)=>{
     var cityName = e.target.value;
     getCurrentWeather(cityName);
     getWeatherForecast(cityName);
-})
+});
 
 // notes: 
 // - find codes for fahrenheit and percent signs 
