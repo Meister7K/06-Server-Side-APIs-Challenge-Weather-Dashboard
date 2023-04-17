@@ -1,3 +1,26 @@
-#weather-forecast {
-    color: aliceblue;
+*{
+    margin: 1px;
+    text-shadow: -1px -1px 0 black, 1px 1px 0 black, -1px 1px black, 1px -1px black;
+    color: white;
+}
+h1,h2,h3,h4,h5,h6{
+    font-weight: bolder;
+}
+
+body{
+    background-image: url(../Images/weather.jpg);
+    margin: 0;
+  padding: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: black;
+  background-attachment: fixed;
+  background-position: center;
+}
+#current-weather {
+    border: 1px solid gray;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: lightskyblue;
+    /* filter: opacity(.5); */
 }

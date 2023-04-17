@@ -7,6 +7,7 @@ var cityArray;
 // Set Local Storage
 if(localStorage.getItem("weatherSearches")){
     cityArray = JSON.parse(localStorage.getItem("weatherSearches"))
+    setLocalStorage(cityArray);
 } else {
     cityArray=[];
 };
@@ -88,7 +89,7 @@ function createHistoryLog(cityName){
     $("#search-history").prepend(`<button class="btn btn-dark historyBtn" value=${cityName}>${cityName}</button>`)
 };
 
-function setLocalStorage(){
+function setLocalStorage(array){
     $.each(array, (i) => {
 createHistoryLog(array[i])
     })
