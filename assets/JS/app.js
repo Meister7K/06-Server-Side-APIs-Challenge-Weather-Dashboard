@@ -21,14 +21,26 @@ function getCurrentWeather(cityName) {
         console.log(response);
         console.log(todaysDate);
         var weatherIcon = `https://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`;
-
+        // console.log(response.coord);
+        // getUVIndex(response.coord);
         currentWeather.html(`<h3>${response.name}, ${response.sys.country} (${todaysDate.getMonth() + 1}/${todaysDate.getDate()}/${todaysDate.getFullYear()})<img src=${weatherIcon}></h2>
         <p>Temp: ${response.main.temp} F</p>
         <p>Humidity: ${response.main.humidity}%</p>
-        <p>WindSpeed: ${response.wind.speed} m/s</p>
-        <p>UV Index: </p>`) //add uv index response 
+        <p>WindSpeed: ${response.wind.speed} m/s</p>`);
+        getUVIndex(response.coord);
+        createHistoryLog(response.name);
     })
 
+};
+// get UV index 
+function getUVIndex(coord){
+    var queryURL = `https://api.openweathermap.org/data/2.5/uvi?lat=${coord.lat}&lon=${coord.lon}&appid=${apiKey}`;
+
+    $.get(queryURL).then((response) =>{
+        let uvIndex = response.value;
+        console.log(uvIndex);
+        currentWeather.append(`<p>UV Index: ${uvIndex}/11</p>`);
+    })
 };
 
 // Get weather forecast /append into html/
@@ -55,18 +67,20 @@ function getWeatherForecast(cityName) {
                         <p>Humidity: ${forecastData[i].main.humidity}%</p>
                     </div>
                 </div>
-            </div>`)//ended here
+            </div>`)
         })
     })
 
 };
 // Get search history buttons /append into html/
-function createHistoryLog(){
+function createHistoryLog(cityName){
     var searchedCity = cityName.trim();
+    var evaluateButton = $()
 
 }
 // initial calls 
-
+getCurrentWeather("Minneapolis");
+getWeatherForecast("Minneapolis");
 // EL Buttons
 $('#city-search-button').click((e) => {
     e.preventDefault();
