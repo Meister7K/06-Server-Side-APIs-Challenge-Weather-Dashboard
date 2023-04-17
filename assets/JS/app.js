@@ -12,9 +12,9 @@ if(localStorage.getItem("weatherSearches")){
 };
 
 // !Functions
-// Get current Weather /append into html/ 
+// Get current Weather /append into html/ look into lat long 
 function getCurrentWeather(cityName) {
-    var queryURL = `api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${apiKey}`;
+    var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${apiKey}`;
 
     $.get(queryURL).then((response) =>{
         var todaysDate = new Date(response.dt * 1000);
@@ -22,42 +22,49 @@ function getCurrentWeather(cityName) {
         console.log(todaysDate);
         var weatherIcon = `https://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`;
 
-        currentWeather.html(`<h3>${response.name}, ${response.city.country} (${todaysDate.getMonth()}/${todaysDate.getDay()}/${todaysDate.getFullYear()})<img src=${WeatherIcon}></h2>
-        <p>Temp:${response.main.temp} F</p>
-        <p>Humidity:${response.main.humidity}%</p>
-        <p>WindSpeed:${response.wind.speed} m/s</p>
-        <p>UV Index: </p>`) //add uv index response
+        currentWeather.html(`<h3>${response.name}, ${response.sys.country} (${todaysDate.getMonth() + 1}/${todaysDate.getDate()}/${todaysDate.getFullYear()})<img src=${weatherIcon}></h2>
+        <p>Temp: ${response.main.temp} F</p>
+        <p>Humidity: ${response.main.humidity}%</p>
+        <p>WindSpeed: ${response.wind.speed} m/s</p>
+        <p>UV Index: </p>`) //add uv index response 
     })
 
-}
+};
 
 // Get weather forecast /append into html/
 function getWeatherForecast(cityName) {
-    var queryURL = `api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=imperial&appid=${apiKey}`;
+    var queryURL = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=imperial&appid=${apiKey}`;
 
     $.get(queryURL).then((response) =>{
         var forecastData = response.list;
         weatherForecast.empty();
+            console.log(response);
         $.each(forecastData, (i) =>{
+            if(!forecastData[i].dt_txt.includes('12:00:00')){
+                return;
+            }
             var forecastDate = new Date(forecastData[i].dt * 1000);
             var weatherIcon = `https://openweathermap.org/img/wn/${forecastData[i].weather[0].icon}.png`;
             weatherForecast.append(`
             <div class="col-m">
                 <div class="card bg-primary">
                     <div class="card-body">
-                        <h4>${forecastDate.getMonth()}/${forecastDate.getDay()}/${forecastDate.getFullYear()}</h4>
+                        <h4>${forecastDate.getMonth() + 1}/${forecastDate.getDate()}/${forecastDate.getFullYear()}</h4>
                         <img src=${weatherIcon}>
-                        <p>Temp:${forecastData[i].main.temp} F>/p>
+                        <p>Temp: ${forecastData[i].main.temp} F</p>
                         <p>Humidity: ${forecastData[i].main.humidity}%</p>
                     </div>
                 </div>
-            </div>`)//ended here 
+            </div>`)//ended here
         })
     })
 
 };
 // Get search history buttons /append into html/
+function createHistoryLog(){
+    var searchedCity = cityName.trim();
 
+}
 // initial calls 
 
 // EL Buttons
@@ -65,9 +72,14 @@ $('#city-search-button').click((e) => {
     e.preventDefault();
     var cityName = $('#city-input').val();
     getCurrentWeather(cityName);
-    // call weather forecast (cityName)
+    getWeatherForecast(cityName);
 })
 
+$('#search-history').click((e)=>{
+    var cityName = e.target.value;
+    getCurrentWeather(cityName);
+    getWeatherForecast(cityName);
+})
 
 // notes: 
 // - find codes for fahrenheit and percent signs 
